@@ -98,10 +98,11 @@ Make the workloads compatible, by checking the reports provided by the tool-
 <br>
 •	If you are using 2 docker files to run simultaneously ASF & AKS, then do the below changes to upgrade image to support 4.8 
 <br>
-     o Add new Docker file for AKS.<br>
+     o Add new Docker file for AKS.
+ <br>
      o Change existing Docker file for ASF till it is not migrated to AKS production.
 <br>
-•	Use latest Windows server 2022 Images.[refernce link](https://learn.microsoft.com/en-us/azure/aks/upgrade-windows-2019-2022)
+•	Use latest Windows server 2022 [images](https://learn.microsoft.com/en-us/azure/aks/upgrade-windows-2019-2022).
 <br>
 #### Pipeline Changes 
 •	Add AKSConfigPrefix in Web.config
@@ -121,9 +122,9 @@ Make the workloads compatible, by checking the reports provided by the tool-
 #### AKS deployment related Changes
 o	Decide the AKS version as per [release calander](https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar).
 <br>
-o In AKS if you need Windows Containers node pool, then while creating the cluster you need bydefault a system linux container node pool with at least three nodes.In the AKS cluster you have to use the "y --windows-admin-username parameter" otherwise AKS will not prepare itself for windows nodepools.[refernce  link](https://learn.microsoft.com/en-us/azure/aks/learn/quick-windows-container-deploy-cli#create-an-aks-cluster)
+o In AKS if you need Windows Containers node pool, then while creating the cluster you need bydefault a system linux container node pool with at least three nodes.In the AKS cluster you have to use the "y --windows-admin-username parameter" otherwise AKS will not prepare itself for windows nodepools.[know more](https://learn.microsoft.com/en-us/azure/aks/learn/quick-windows-container-deploy-cli#create-an-aks-cluster)
 <br>
-o	Next create windows nodepool [refernce link](https://learn.microsoft.com/en-us/azure/aks/learn/quick-windows-container-deploy-cli#add-a-windows-server-2022-node-pool)
+o	Next create [windows nodepool](https://learn.microsoft.com/en-us/azure/aks/learn/quick-windows-container-deploy-cli#add-a-windows-server-2022-node-pool)
 ** you may need to update the CLI version to 2.40, with terraform deployment.
 <br>
 o	Check Resource Quotas/RBAC at namespace level
@@ -158,29 +159,33 @@ o	Use ACR as image repository and [authenticate](https://learn.microsoft.com/en-
 •	Use Azure vNET integration via Azure CNI
 <br>
 ## Sample Migration Process for Projects
-<br>
+
 **For Windows  container deployment-**
 <br>
 The DevOps team can perform repository-wise migration. For win framework projects update the framework version with 4.8 on the existing dev repository. 
 <br> Once the package is ready, deploy it. Post deployment, point the application on dev branch from ASF to AKS. Once the Developer provides sign-off on Dev, perform API health check. DevOps then updates the Release branch code with the latest framework and deploys the AKS and ASF on QC environment. In between, if any features or bug fixing is required by the app team, then they can work on the current repository and take release at any time. The old Deployment pipeline can be alive till production. Disable the Old Pipeline across all branch’s postproduction deployment.
 <br>
 **For Linux  container deployment-**
+<br>
 Steps are more or less similar for.NET Core 2.1/2.2/3.1 to .NET 6.0. We used the ubuntu image Ubuntu 22.04 for AKS 1.23. 
 <br>
-From AKS 1.25 and afterwards, the underlying image will change [refrence link](https://github.com/Azure/AKS/releases/tag/2022-09-25)
+From AKS 1.25 and afterwards, the underlying image will change.[know more](https://github.com/Azure/AKS/releases/tag/2022-09-25)
 <br>
-Few more links
-* [ASP.NET app containerization and migration to Azure Kubernetes Service](https://learn.microsoft.com/en-us/azure/migrate/tutorial-app-containerization-aspnet-kubernetes)
-* [Continuation of container support in Azure Service Fabric](https://github.com/Azure/Service-Fabric-Troubleshooting-Guides/blob/master/Deployment/Mirantis-Guidance.md)
+Few more links-
+<br>
+[ASP.NET app containerization and migration to Azure Kubernetes Service](https://learn.microsoft.com/en-us/azure/migrate/tutorial-app-containerization-aspnet-kubernetes)
+<br>
+[Continuation of container support in Azure Service Fabric](https://github.com/Azure/Service-Fabric-Troubleshooting-Guides/blob/master/Deployment/Mirantis-Guidance.md)
+<br>
 ## Documentation challenges faced
 •	Multiple build related errors during each project migration. Create KB article an document learning for others.
 <br>
 •	Legacy dll consumption causing more inter dependency and migration is not straight forward without checking them. Use nuget package library/GH Nuget Registry.
-
+<br>
 ## Performance Optimization
 With latest deployment in AKS, We performed various performance tests and used multiple tools.The outcome of these performance test activities showed whether there is a overall performance problem or it is in one of the deployments. 
 <br>
-Best practices
+**Best practices**
 <br>
 •	Study network diagram of all components for comparing the two measurable deployments (old and new)
 <br>
@@ -196,9 +201,11 @@ Best practices
 <br>
 •	Gather Network stack traces and Process Dumps for given containers during the stress test (And not while manual / user testing). Find a way to maximize duration of dumps.Capture [GCdump](https://devblogs.microsoft.com/dotnet/collecting-and-analyzing-memory-dumps/).capture [tcpdump](https://learn.microsoft.com/en-us/troubleshoot/azure/azure-kubernetes/packet-capture-pod-level) from the pod level.
 <br>
-•	Use the monitoring tabs in the Azure portal, also connect to the nodes/pods and collect logs [know more](https://learn.microsoft.com/en-us/troubleshoot/azure/azure-kubernetes/identify-memory-saturation-aks)
+•	Use the monitoring tabs in the Azure portal, also connect to the nodes/pods and collect [logs](https://learn.microsoft.com/en-us/troubleshoot/azure/azure-kubernetes/identify-memory-saturation-aks)
 • If in scope then guide customer to check code base as well.
-
+<br>
+<br>
+<br>
 Feedback appreciated ....__[By Moumita Dey Verma](https://www.linkedin.com/in/moumita-dey-verma-8b61692a/)__
 
 
