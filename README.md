@@ -3,7 +3,7 @@ This article is a direct recount of migration journey from ASF - containers to A
 <br>
 When we had just started out, we could not find appropriate guidelines or steps to ease me through the process. I hope this article will help those of you planning a similar journey to AKS.
 <br>
-Journey began when one of my costumers got the [communication](https://techcommunity.microsoft.com/t5/containers/reminder-updates-to-windows-container-runtime-support/ba-p/3620989) that  for their stable workloads deployed in ASF containers they have to face service disruption. ASF windows containers were internally using Mirantis Container Runtime, former DockerEE.
+Journey began when one of our costumers got the [communication](https://techcommunity.microsoft.com/t5/containers/reminder-updates-to-windows-container-runtime-support/ba-p/3620989) that  for their stable workloads deployed in ASF containers they have to face service disruption. ASF windows containers were internally using Mirantis Container Runtime, former DockerEE.
 <br>
 **"Post 30 April 2023 Service Fabric customers using “with containers” VM images will face service disruptions as Microsoft will remove the “with container” VM images from the Azure image gallery".**
 <br>After initial investigation we figured out that moving to AKS Linux container is in the final roadmap of the current product.
