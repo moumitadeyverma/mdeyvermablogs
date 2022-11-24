@@ -54,9 +54,9 @@ Make the workloads compatible, by checking the reports provided by the tool-
 <br>
   • Migration Effort.
 <br>
-  • Rediness Status in percentage.
+  • Readiness Status in percentage.
 <br>
-  • Detailed code level fix.
+  • Detailed code level fix guidance.
 
 #### Migration from Framework 4.6.1 to 4.8
 •	Change the target framework from “<TargetFrameworkVersion>v4.6.1</ TargetFrameworkVersion >“ to “<TargetFrameworkVersion >v4.8</ TargetFrameworkVersion >“ for every project in the solution that you are targeting.
@@ -178,18 +178,18 @@ Few more links-
 [Continuation of container support in Azure Service Fabric](https://github.com/Azure/Service-Fabric-Troubleshooting-Guides/blob/master/Deployment/Mirantis-Guidance.md)
 <br>
 ## Documentation challenges faced
-•	Multiple build related errors during each project migration. Create KB article an document learning for others.
+•	Multiple build related errors during each project migration. Create KB article for helping other team members.
 <br>
-•	Legacy dll consumption causing more inter dependency and migration is not straight forward without checking them. Use nuget package library/GH Nuget Registry.
+•	Legacy dll consumption causing more inter dependency and migration is not straight forward without checking them. Use NuGet.
 <br>
 ## Performance Optimization
-With latest deployment in AKS, We performed various performance tests and used multiple tools.The outcome of these performance test activities showed whether there is a overall performance problem or it is in one of the deployments. 
+With latest deployment in AKS, We performed various performance tests and used multiple tools.The outcome of these performance test showed whether there is problem with overall performance or with the deployment. 
 <br>
 **Best practices**
 <br>
-•	Study network diagram of all components for comparing the two measurable deployments (old and new)
+•	Review network diagram of all components for comparing the two measurable deployments (old and new)
 <br>
-•	Study conceptional diagram of all workloads, tech stack per workload and where they run on (APIs, web fronts etc) for the two measurable deployments (old and new)
+•	Review conceptional diagram of all workloads, tech stack per workload and where they run on (APIs, web fronts etc) for the two measurable deployments (old and new)
 <br>
 •	Check test case scenario and the sample data used for performance test (how many concurrent users, how many test scenarios, iterations of test scenarios, sample data either random, or pre-recorded etc). 
 <br>
