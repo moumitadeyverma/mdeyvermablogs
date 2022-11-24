@@ -9,14 +9,14 @@ Journey began when one of our costumers got the [communication](https://techcomm
 <br>After initial investigation we figured out that moving to AKS Linux container is in the final roadmap of the current product.
 <br>
 ## Decision Factors
-The code is legacy and we didn't have enough time to rewrite the code within a short duration from .net framework to .net core.So we started our journey with two types of containerized workloads **Windows and Linux**.
+The code is legacy and we didn't have enough time to rewrite the code within a short duration from .net framework to .net core and deploy all in Linux container.So we started our journey with combination of two types of workloads **Windows and Linux**.
 <br>
 Also we had to choose the highest common supported .NET version for win 2019 and win 2022. Since ASF workloads were still modified and deployed in parallel in ASF using win 2019, we chose the latest common version 4.8. [know more](https://github.com/microsoft/dotnet-framework-docker/issues/849)
 <br>
 #### We took the below approach to upgrade framework
-  a.	Upgraded from .net framework current version to the latest version 4.8 and deployed in AKS **Windows** containers.(almost 130 projects)
+  a.	Upgraded from .net framework current version to the latest version 4.8 and deployed in AKS **Windows** containers.(Approx 130 projects)
   <br>
-  b.	Upgraded from .net core to .net 6.0 and deployed in AKS **Linux** containers. (almost 20 projects)
+  b.	Upgraded from .net core to .net 6.0 and deployed in AKS **Linux** containers. (Approx 20 projects)
 
 Support for .net framework 4.6.1 ended in April 2022 [know more](https://devblogs.microsoft.com/dotnet/net-framework-4-5-2-4-6-4-6-1-will-reach-end-of-support-on-april-26-2022/).
 For deciding  the .net framework version use the [link](https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-framework)
@@ -63,7 +63,7 @@ Make the workloads compatible, by checking the reports provided by the tool-
 <br>
 •	If your repo has multiple solutions and they are configured to build the pipeline, then update them all together to use the new version. 
 <br>
-•	Some NuGet packages will give issues, reinstall them again, fix the issues locally. It will not affect the pipeline build because the NuGet is installed every time the pipeline runs.
+•	Some NuGet will give issues, reinstall them again, fix the issues locally. It will not affect the pipeline build because the NuGet is installed every time the pipeline runs.
 <br>
 •	If the AKS deployment folder is not available, create and add the yaml files to the AKS deployment folder. Change Docker image for latest version. 
 <br>
@@ -77,12 +77,12 @@ Make the workloads compatible, by checking the reports provided by the tool-
 <br>
 •	AKS container hosted sites interact with ASF hosted WCF services.
 <br>
-•	Changes related to Common dLL will be required to be published first (nuget package /physical dll references)
+•	Changes related to Common dLL will be required to be published first, to be consumed by others.
 <br>
 •	The Service Fabric programming models like reliable services, reliable actors, Guest executables will need revisit or redesign.
 
 #### DevOps practices
-•	All developers to install the latest version of Visual Studio 2022 and appropriate .NET SDK. 
+•	All developers to install the latest version of Visual Studio 2019 (or greater) and appropriate .NET SDK. 
 <br>
 •	While building the solution locally, you may face issues related to NuGet not able to install after the upgrade, just restart the visual studio and load the solution again.
 <br>
@@ -102,7 +102,7 @@ Make the workloads compatible, by checking the reports provided by the tool-
      o Change existing Docker file for ASF till it is not migrated to AKS production.
 <br>
 •	Use latest Windows server 2022 [images](https://learn.microsoft.com/en-us/azure/aks/upgrade-windows-2019-2022).
-• Add required yaml files for AKS
+• Add required yaml files for AKS.
 <br>
 #### Pipeline Changes 
 •	Add AKSConfigPrefix in Web.config
@@ -115,7 +115,7 @@ Make the workloads compatible, by checking the reports provided by the tool-
 <br>
 •	Disable DEV ADO and Octopus pipeline once they are good with aks
 <br>
-•	Carefully manage the dll chains. Use NuGet for package management.
+•	Store andmanage the DLL versions.
 <br>
 •	Application team to communicate with all consumers about the New dll versions. Publish the documented process to consume the latest dlls for new changes. 
 <br>
@@ -178,7 +178,7 @@ Few more links-
 [Continuation of container support in Azure Service Fabric](https://github.com/Azure/Service-Fabric-Troubleshooting-Guides/blob/master/Deployment/Mirantis-Guidance.md)
 <br>
 ## Documentation challenges faced
-•	Multiple build related errors during each project migration. Create KB article for helping other team members.
+•	Multiple build related errors during each project migration. Create KB article to help other team members to reduce time for troubleshooting.
 <br>
 •	Legacy dll consumption causing more inter dependency and migration is not straight forward without checking them. Use NuGet.
 <br>
