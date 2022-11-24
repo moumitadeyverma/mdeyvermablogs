@@ -7,17 +7,16 @@ Journey began when one of our costumers got the [communication](https://techcomm
 <br>
 **"Post 30 April 2023 Service Fabric customers using “with containers” VM images will face service disruptions as Microsoft will remove the “with container” VM images from the Azure image gallery".**
 <br>After initial investigation we figured out that moving to AKS Linux container is in the final roadmap of the current product.
-<br>So we started our journey with two types of containerized workloads **Windows and Linux** before they reach the final goal.
-
+<br>
 ## Decision Factors
-The code is legacy and we didn't have enough time to rewrite the code within a short duration from .net framework to .net core.
+The code is legacy and we didn't have enough time to rewrite the code within a short duration from .net framework to .net core.So we started our journey with two types of containerized workloads **Windows and Linux**.
 <br>
 Also we had to choose the highest common supported .NET version for win 2019 and win 2022. Since ASF workloads were still modified and deployed in parallel in ASF using win 2019, we chose the latest common version 4.8. [know more](https://github.com/microsoft/dotnet-framework-docker/issues/849)
 <br>
 #### We took the below approach to upgrade framework
-  a.	Upgraded from .net framework current version to the latest version 4.8 and deployed in AKS **Windows** containers. 
+  a.	Upgraded from .net framework current version to the latest version 4.8 and deployed in AKS **Windows** containers.(almost 130 projects)
   <br>
-  b.	Upgraded from .net core to .net 6.0 and deployed in AKS **Linux** containers.
+  b.	Upgraded from .net core to .net 6.0 and deployed in AKS **Linux** containers. (almost 20 projects)
 
 Support for .net framework 4.6.1 ended in April 2022 [know more](https://devblogs.microsoft.com/dotnet/net-framework-4-5-2-4-6-4-6-1-will-reach-end-of-support-on-april-26-2022/).
 For deciding  the .net framework version use the [link](https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-framework)
@@ -34,7 +33,7 @@ For upgrading to latest version use the below tools-
 <br>
 • Moved the existing linux containers to AKS Linux containers 
 <br>
-• Left as is the WCF services hosted in ASF with worker role and customization. [know more](https://learn.microsoft.com/en-us/azure/service-fabric/service-fabric-reliable-services-communication-wcf).
+• Left the WCF services untouched, hosted in ASF with worker role and customization. [know more](https://learn.microsoft.com/en-us/azure/service-fabric/service-fabric-reliable-services-communication-wcf).
 Since customer is planning eventually to move everything to linux containers ,so later they have to re implement the WCF part with more modern technologies like gRPC or http Request/Response webApIs.
 <br>
 Refer to the below links to find out the correct base image, that has IIS Roles enabled for windows containers
@@ -87,7 +86,7 @@ Make the workloads compatible, by checking the reports provided by the tool-
 <br>
 •	While building the solution locally, you may face issues related to NuGet not able to install after the upgrade, just restart the visual studio and load the solution again.
 <br>
-•	If project dlls are pushed to common folder, the consumer project will fail until the related common DLL folders are having correct versions. Use own [NuGet](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry) feeds/GitHub Package Registry
+•	If project dlls are pushed to common folder, the consumer project will fail until the related common DLL folders are having correct versions. Use [NuGet](https://learn.microsoft.com/en-us/azure/devops/artifacts/get-started-nuget?view=azure-devops&tabs=windows).
 <br>
 •	You may find “DLL not found issue” with the upgrade, to solve this please remove the related binding from the web.config and run the build again.
 
@@ -103,6 +102,7 @@ Make the workloads compatible, by checking the reports provided by the tool-
      o Change existing Docker file for ASF till it is not migrated to AKS production.
 <br>
 •	Use latest Windows server 2022 [images](https://learn.microsoft.com/en-us/azure/aks/upgrade-windows-2019-2022).
+• Add required yaml files for AKS
 <br>
 #### Pipeline Changes 
 •	Add AKSConfigPrefix in Web.config
@@ -125,7 +125,7 @@ o	Decide the AKS version as per [release calander](https://learn.microsoft.com/e
 o In AKS if you need Windows Containers node pool, then while creating the cluster you need bydefault a system linux container node pool with at least three nodes.In the AKS cluster you have to use the "y --windows-admin-username parameter" otherwise AKS will not prepare itself for windows nodepools.[know more](https://learn.microsoft.com/en-us/azure/aks/learn/quick-windows-container-deploy-cli#create-an-aks-cluster)
 <br>
 o	Next create [windows nodepool](https://learn.microsoft.com/en-us/azure/aks/learn/quick-windows-container-deploy-cli#add-a-windows-server-2022-node-pool)
-** you may need to update the CLI version to 2.40, with terraform deployment.
+** You may need to update the CLI version to higher version (2.40) with terraform deployment.
 <br>
 o	Check Resource Quotas/RBAC at namespace level
 <br>
@@ -150,7 +150,7 @@ o	Use ACR as image repository and [authenticate](https://learn.microsoft.com/en-
 <br>
 •	Create New AKS Cluster 
 <br>
-•	Create node pool with ephemeral disk and availability zones. Test throughput
+•	Create node pool with ephemeral OS disk (heavy IOPS) and availability zones. Test throughput
 <br>
 •	Avoid using custom dns
 <br>
