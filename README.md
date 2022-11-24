@@ -12,14 +12,14 @@ Journey began when one of our costumers got the [communication](https://techcomm
 ## Decision Factors
 The code is legacy and we didn't have enough time to rewrite the code within a short duration from .net framework to .net core.
 <br>
-Also we had to choose the highest common supported .NET version for win 2019 and win 2022. Since ASF workloads were still modified and deployed in parallel in ASF using win 2019.So we chose the latest common version 4.8. [know more](https://github.com/microsoft/dotnet-framework-docker/issues/849)
+Also we had to choose the highest common supported .NET version for win 2019 and win 2022. Since ASF workloads were still modified and deployed in parallel in ASF using win 2019, we chose the latest common version 4.8. [know more](https://github.com/microsoft/dotnet-framework-docker/issues/849)
 <br>
-#### We took the below approach for framework upgrade
+#### We took the below approach to upgrade framework
   a.	Upgraded from .net framework current version to the latest version 4.8 and deployed in AKS **Windows** containers. 
   <br>
   b.	Upgraded from .net core to .net 6.0 and deployed in AKS **Linux** containers.
 
-Support for .net framework 4.6.1 ended on april 2022 [know more](https://devblogs.microsoft.com/dotnet/net-framework-4-5-2-4-6-4-6-1-will-reach-end-of-support-on-april-26-2022/).
+Support for .net framework 4.6.1 ended in April 2022 [know more](https://devblogs.microsoft.com/dotnet/net-framework-4-5-2-4-6-4-6-1-will-reach-end-of-support-on-april-26-2022/).
 For deciding  the .net framework version use the [link](https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-framework)
 <br>
 For upgrading to latest version use the below tools-
@@ -29,8 +29,8 @@ For upgrading to latest version use the below tools-
  **[Upgrade Assistant](https://dotnet.microsoft.com/en-us/platform/upgrade-assistant/tutorial/install-upgrade-assistant)** 
  <br>
  
-#### We took the below approach for containers upgrade
-• Moved existing windows containers to latest AKS windows containers- WS2022 for a huge number of important reasons [know more](https://learn.microsoft.com/en-us/virtualization/windowscontainers/about/whats-new-ws2022-containers)
+#### We took the below approach to upgrade containers
+• Moved existing windows containers to latest AKS windows containers- WS2022 for several number of important reasons [know more](https://learn.microsoft.com/en-us/virtualization/windowscontainers/about/whats-new-ws2022-containers)
 <br>
 • Moved the existing linux containers to AKS Linux containers 
 <br>
