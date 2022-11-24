@@ -1,9 +1,9 @@
 # Migration journey from Azure Service Fabric(ASF) Containers to Azure Kubernetes Service(AKS)  
-This article is a direct recount of my migration journey from ASF - containers to AKS containers for a 8 years old legacy app.
+This article is a direct recount of migration journey from ASF - containers to AKS containers for a 8 years old legacy app.
 <br>
 When we had just started out, we could not find appropriate guidelines or steps to ease me through the process. I hope this article will help those of you planning a similar journey to AKS.
 <br>
-My journey began when one of my costumers got the [communication](https://techcommunity.microsoft.com/t5/containers/reminder-updates-to-windows-container-runtime-support/ba-p/3620989) that  for their stable workloads deployed in ASF containers they have to face service disruption. ASF windows containers were internally using Mirantis Container Runtime, former DockerEE.
+Journey began when one of my costumers got the [communication](https://techcommunity.microsoft.com/t5/containers/reminder-updates-to-windows-container-runtime-support/ba-p/3620989) that  for their stable workloads deployed in ASF containers they have to face service disruption. ASF windows containers were internally using Mirantis Container Runtime, former DockerEE.
 <br>
 **"Post 30 April 2023 Service Fabric customers using “with containers” VM images will face service disruptions as Microsoft will remove the “with container” VM images from the Azure image gallery".**
 <br>After initial investigation we figured out that moving to AKS Linux container is in the final roadmap of the current product.
@@ -12,31 +12,29 @@ My journey began when one of my costumers got the [communication](https://techco
 ## Decision Factors
 The code is legacy and we didn't have enough time to rewrite the code within a short duration from .net framework to .net core.
 <br>
-Also we had to choose the highest common supported .NET version for win 2019 and win 2022. Since ASF workloads were still modified and deployed parallely in ASF using win 2019.So we chose the latest common version 4.8. [reference link](https://github.com/microsoft/dotnet-framework-docker/issues/849)
+Also we had to choose the highest common supported .NET version for win 2019 and win 2022. Since ASF workloads were still modified and deployed parallely in ASF using win 2019.So we chose the latest common version 4.8. [know more](https://github.com/microsoft/dotnet-framework-docker/issues/849)
 <br>
-_**We took the below approach for framework upgrade-**_
-<br>
+#### We took the below approach for framework upgrade
   a.	Upgraded from .net framework current version to the latest version 4.8 and deployed in AKS **Windows** containers. 
   <br>
   b.	Upgraded from .net core to .net 6.0 and deployed in AKS **Linux** containers.
 
-Support for .net framework 4.6.1 ended on april 2022 [reference link](https://devblogs.microsoft.com/dotnet/net-framework-4-5-2-4-6-4-6-1-will-reach-end-of-support-on-april-26-2022/).
-For deciding  the .net framework version use the [reference link](https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-framework)
+Support for .net framework 4.6.1 ended on april 2022 [know more](https://devblogs.microsoft.com/dotnet/net-framework-4-5-2-4-6-4-6-1-will-reach-end-of-support-on-april-26-2022/).
+For deciding  the .net framework version use the [link](https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-framework)
 <br>
 For upgrading to latest version use the below tools-
 
- **Portability Analyzer** https://docs.microsoft.com/en-us/dotnet/standard/analyzers/portability-analyzer
+ **[Portability Analyzer](https://docs.microsoft.com/en-us/dotnet/standard/analyzers/portability-analyzer)**
  <br>
- **Upgrade Assistant** https://dotnet.microsoft.com/en-us/platform/upgrade-assistant/tutorial/install-upgrade-assistant
+ **[Upgrade Assistant](https://dotnet.microsoft.com/en-us/platform/upgrade-assistant/tutorial/install-upgrade-assistant)** 
  <br>
  
-_**We took the below approach for containers considering the short time to migrate 1k Vms-**_
-<br>
-• Moved existing windows containers to latest AKS windows containers- WS2022 for a huge number of important reasons [reference link](https://learn.microsoft.com/en-us/virtualization/windowscontainers/about/whats-new-ws2022-containers)
+#### We took the below approach for containers upgrade
+• Moved existing windows containers to latest AKS windows containers- WS2022 for a huge number of important reasons [know more](https://learn.microsoft.com/en-us/virtualization/windowscontainers/about/whats-new-ws2022-containers)
 <br>
 • Moved the existing linux containers to AKS Linux containers 
 <br>
-• Left as is the WCF services hosted in ASF with worker role and customization. [reference link](https://learn.microsoft.com/en-us/azure/service-fabric/service-fabric-reliable-services-communication-wcf).
+• Left as is the WCF services hosted in ASF with worker role and customization. [know more](https://learn.microsoft.com/en-us/azure/service-fabric/service-fabric-reliable-services-communication-wcf).
 Since customer is planning eventually to move everything to linux containers ,so later they have to re implement the WCF part with more modern technologies like gRPC or http Request/Response webApIs.
 <br>
 Refer to the below links to find out the correct base image, that has IIS Roles enabled for windows containers
@@ -49,14 +47,16 @@ https://hub.docker.com/_/microsoft-windows-servercore-iis?tab=description
 Changes are to be made in the new or existing repository as per the organization process.
 
 #### Discover your Workloads: 
-Use tools like Cloud Pilot to discover applications and APIs that are in scope of migrtaion.
-<br>
-Video link of the tool-> https://www.youtube.com/watch?v=cO27cq9IiuE&list=PL8ZFxfkhI2ewuyjmmcls7_xTJX1ciEARl
+Use tools like [Cloud Pilot](https://www.youtube.com/watch?v=cO27cq9IiuE&list=PL8ZFxfkhI2ewuyjmmcls7_xTJX1ciEARl) to discover applications and APIs that are in scope of migrtaion.
 <br>
 Make the workloads compatible, by checking the reports provided by the tool-
+<br>
   • Recommendations Rresults  by 4 pillars- Application & Platform design, Security,Network & Availability and Storage
-  • Migration Effort
+<br>
+  • Migration Effort.
+<br>
   • Rediness Status in percentage.
+<br>
   • Detailed code level fix.
 
 #### Migration from Framework 4.6.1 to 4.8
@@ -87,7 +87,7 @@ Make the workloads compatible, by checking the reports provided by the tool-
 <br>
 •	While building the solution locally, you may face issues related to NuGet not able to install after the upgrade, just restart the visual studio and load the solution again.
 <br>
-•	If project dlls are pushed to common folder, the consumer project will fail until the related common DLL folders are having correct versions. 
+•	If project dlls are pushed to common folder, the consumer project will fail until the related common DLL folders are having correct versions. Use own [NuGet](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry) feeds/GitHub Package Registry
 <br>
 •	You may find “DLL not found issue” with the upgrade, to solve this please remove the related binding from the web.config and run the build again.
 
@@ -119,7 +119,7 @@ Make the workloads compatible, by checking the reports provided by the tool-
 •	Application team to communicate with all consumers about the New dll versions. Publish the documented process to consume the latest dlls for new changes. 
 <br>
 #### AKS deployment related Changes
-o	Decide the AKS version as per release calander.[reference link](https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar)
+o	Decide the AKS version as per [release calander](https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar).
 <br>
 o In AKS if you need Windows Containers node pool, then while creating the cluster you need bydefault a system linux container node pool with at least three nodes.In the AKS cluster you have to use the "y --windows-admin-username parameter" otherwise AKS will not prepare itself for windows nodepools.[refernce  link](https://learn.microsoft.com/en-us/azure/aks/learn/quick-windows-container-deploy-cli#create-an-aks-cluster)
 <br>
@@ -155,32 +155,28 @@ o	Use ACR as image repository and [authenticate](https://learn.microsoft.com/en-
 <br>
 •	Use Static public IP address
 <br>
-•	Azure vNET integration via Azure CNI
-<br>
-•	Nginx ingress controller for routing is used
-<br>
-•	NSG, front door + WAF implemented in prevention mode, no azure firewall, traffic comes is filtered at nsg level.
+•	Use Azure vNET integration via Azure CNI
 <br>
 ## Sample Migration Process for Projects
 <br>
-For Windows  container deployment-
+**For Windows  container deployment-**
 <br>
 The DevOps team can perform repository-wise migration. For win framework projects update the framework version with 4.8 on the existing dev repository. 
 <br> Once the package is ready, deploy it. Post deployment, point the application on dev branch from ASF to AKS. Once the Developer provides sign-off on Dev, perform API health check. DevOps then updates the Release branch code with the latest framework and deploys the AKS and ASF on QC environment. In between, if any features or bug fixing is required by the app team, then they can work on the current repository and take release at any time. The old Deployment pipeline can be alive till production. Disable the Old Pipeline across all branch’s postproduction deployment.
 <br>
-For Linux  container deployment-
- ** Steps are more or less similar for.NET Core 2.1/2.2/3.1 to .NET 6.0. We used the ubuntu image Ubuntu 22.04 for AKS 1.23. 
- <br>
- From AKS 1.25 and afterwards, the underlying image will change [refrence link](https://github.com/Azure/AKS/releases/tag/2022-09-25)
+**For Linux  container deployment-**
+Steps are more or less similar for.NET Core 2.1/2.2/3.1 to .NET 6.0. We used the ubuntu image Ubuntu 22.04 for AKS 1.23. 
 <br>
-More reference links
+From AKS 1.25 and afterwards, the underlying image will change [refrence link](https://github.com/Azure/AKS/releases/tag/2022-09-25)
+<br>
+Few more links
 * [ASP.NET app containerization and migration to Azure Kubernetes Service](https://learn.microsoft.com/en-us/azure/migrate/tutorial-app-containerization-aspnet-kubernetes)
 * [Continuation of container support in Azure Service Fabric](https://github.com/Azure/Service-Fabric-Troubleshooting-Guides/blob/master/Deployment/Mirantis-Guidance.md)
-## Challenges faced
+## Documentation challenges faced
 •	Multiple build related errors during each project migration. Create KB article an document learning for others.
 <br>
-•	Legacy dll consumption causing more inter dependency and migration is not straight forward without checking them. Use nuget package library.
-<br>
+•	Legacy dll consumption causing more inter dependency and migration is not straight forward without checking them. Use nuget package library/GH Nuget Registry.
+
 ## Performance Optimization
 With latest deployment in AKS, We performed various performance tests and used multiple tools.The outcome of these performance test activities showed whether there is a overall performance problem or it is in one of the deployments. 
 <br>
@@ -200,9 +196,9 @@ Best practices
 <br>
 •	Gather Network stack traces and Process Dumps for given containers during the stress test (And not while manual / user testing). Find a way to maximize duration of dumps.Capture [GCdump](https://devblogs.microsoft.com/dotnet/collecting-and-analyzing-memory-dumps/).capture [tcpdump](https://learn.microsoft.com/en-us/troubleshoot/azure/azure-kubernetes/packet-capture-pod-level) from the pod level.
 <br>
-•	Use the monitoring tabs in the Azure portal, also connect to the nodes/pods and collect logs [reference link](https://learn.microsoft.com/en-us/troubleshoot/azure/azure-kubernetes/identify-memory-saturation-aks)
+•	Use the monitoring tabs in the Azure portal, also connect to the nodes/pods and collect logs [know more](https://learn.microsoft.com/en-us/troubleshoot/azure/azure-kubernetes/identify-memory-saturation-aks)
 • If in scope then guide customer to check code base as well.
 
-__By Moumita Dey Verma__ 
+Feedback appreciated ....__[By Moumita Dey Verma](https://www.linkedin.com/in/moumita-dey-verma-8b61692a/)__
 
 
