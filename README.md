@@ -183,7 +183,7 @@ Few more links-
 •	Legacy dll consumption causing more inter dependency and migration is not straight forward without checking them. Use NuGet.
 <br>
 ## Performance Optimization
-With latest deployment in AKS, We performed various performance tests and used multiple tools.The outcome of these performance test showed whether there is problem with overall performance or with the deployment. 
+With latest deployment in AKS, We performed various performance tests and used multiple tools.The outcome of these performance tests showed whether there is problem with overall performance or with the deployment. 
 <br>
 **Best practices**
 <br>
