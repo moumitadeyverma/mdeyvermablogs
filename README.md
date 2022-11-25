@@ -14,9 +14,9 @@ The code is legacy and we didn't have enough time to rewrite the code within a s
 Also we had to choose the highest common supported .NET version for win 2019 and win 2022. Since ASF workloads were still modified and deployed in parallel in ASF using win 2019, we chose the latest common version 4.8. [know more](https://github.com/microsoft/dotnet-framework-docker/issues/849)
 <br>
 #### We took the below approach to upgrade framework
-  a.	Upgraded from .net framework current version to the latest version 4.8 and deployed in AKS **Windows** containers.(Approx 130 projects)
+  a.	Upgraded from .net framework current version to the latest version 4.8 and deployed in AKS **Windows** containers.(Approx 7x projects)
   <br>
-  b.	Upgraded from .net core to .net 6.0 and deployed in AKS **Linux** containers. (Approx 20 projects)
+  b.	Upgraded from .net core to .net 6.0 and deployed in AKS **Linux** containers. (Approx x projects)
 
 Support for .net framework 4.6.1 ended in April 2022 [know more](https://devblogs.microsoft.com/dotnet/net-framework-4-5-2-4-6-4-6-1-will-reach-end-of-support-on-april-26-2022/).
 For deciding  the .net framework version use the [link](https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-framework)
