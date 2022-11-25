@@ -15,9 +15,8 @@ The code is legacy and we didn't have enough time to rewrite the code within a s
 Also we had to choose the highest common supported .NET version for win 2019 and win 2022. Since ASF workloads were still modified and deployed in parallel in ASF using win 2019, we chose the latest common version 4.8. [know more](https://github.com/microsoft/dotnet-framework-docker/issues/849)
 <br>
 #### We took the below approach to upgrade framework
-  a.	Upgraded from .net framework current version to the latest version 4.8 and deployed in AKS **Windows** containers.(Approx 7x projects)
-  <br>
-  b.	Upgraded from .net core to .net 6.0 and deployed in AKS **Linux** containers. (Approx x projects)
+  - Upgraded from .net framework current version to the latest version 4.8 and deployed in AKS **Windows** containers.(Approx 7x projects)
+  * Upgraded from .net core to .net 6.0 and deployed in AKS **Linux** containers. (Approx x projects)
 
 Support for .net framework 4.6.1 ended in April 2022 [know more](https://devblogs.microsoft.com/dotnet/net-framework-4-5-2-4-6-4-6-1-will-reach-end-of-support-on-april-26-2022/).
 For deciding  the .net framework version use the [link](https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-framework)
@@ -57,7 +56,6 @@ Make the workloads compatible, by checking the reports provided by the tool-
 #### Migration from Framework 4.6.1 to 4.8
   - Change the target framework from “<TargetFrameworkVersion>v4.6.1</ TargetFrameworkVersion >“ to “<TargetFrameworkVersion >v4.8</ TargetFrameworkVersion >“ for every project in the solution that you are targeting.
   - If your repo has multiple solutions and they are configured to build the pipeline, then update them all together to use the new version. 
-
   - Some NuGet will give issues, reinstall them again, fix the issues locally. It will not affect the pipeline build because the NuGet is installed every time the pipeline runs.
   - If the AKS deployment folder is not available, create and add the yaml files to the AKS deployment folder. Change Docker image for latest version. 
   - In Docker file you may get few errors related to "Import-Module WebAdministration" in POWERSHELL command. Check the [reference link](https://docs.docker.com/engine/reference/builder/#shell). If the Web server Role (IIS) is not active/installed, you need to enable the Web Role before "Import-Module WebAdministration" like this.
@@ -69,82 +67,55 @@ Make the workloads compatible, by checking the reports provided by the tool-
   - The Service Fabric programming models like reliable services, reliable actors, Guest executables will need revisit or redesign.
 
 #### DevOps practices
-•	All developers to install the latest version of Visual Studio 2019 (or greater) and appropriate .NET SDK. 
-<br>
-•	While building the solution locally, you may face issues related to NuGet not able to install after the upgrade, just restart the visual studio and load the solution again.
-<br>
-•	If project dlls are pushed to common folder, the consumer project will fail until the related common DLL folders are having correct versions. Use [NuGet](https://learn.microsoft.com/en-us/azure/devops/artifacts/get-started-nuget?view=azure-devops&tabs=windows).
-<br>
-•	You may find “DLL not found issue” with the upgrade, to solve this please remove the related binding from the web.config and run the build again.
+  - All developers to install the latest version of Visual Studio 2019 (or greater) and appropriate .NET SDK. 
+  - While building the solution locally, you may face issues related to NuGet not able to install after the upgrade, just restart the visual studio and load the solution again.
+  - If project dlls are pushed to common folder, the consumer project will fail until the related common DLL folders are having correct versions. Use [NuGet](https://learn.microsoft.com/en-us/azure/devops/artifacts/get-started-nuget?view=azure-devops&tabs=windows).
+  - You may find “DLL not found issue” with the upgrade, to solve this please remove the related binding from the web.config and run the build again.
 
 #### Code Changes 
-•	Add K8s.deployment folder in Repo.
-<br>
-•	Change Environment variable to Config.yaml (refer to Service manifest used for ASF all used env variables from service manifest file must be moved to config.yaml)
-<br>
-•	If you are using 2 docker files to run simultaneously ASF & AKS, then do the below changes to upgrade image to support 4.8 
-<br>
-     o Add new Docker file for AKS.
- <br>
-     o Change existing Docker file for ASF till it is not migrated to AKS production.
-<br>
-•	Use latest Windows server 2022 [images](https://learn.microsoft.com/en-us/azure/aks/upgrade-windows-2019-2022).
-• Add required yaml files for AKS.
-<br>
+  - Add K8s.deployment folder in Repo.
+  - Change Environment variable to Config.yaml (refer to Service manifest used for ASF all used env variables from service manifest file must be moved to config.yaml)
+  - If you are using 2 docker files to run simultaneously ASF & AKS, then do the below changes to upgrade image to support 4.8 
+       * Add new Docker file for AKS.
+       * Change existing Docker file for ASF till it is not migrated to AKS production.
+  -	Use latest Windows server 2022 [images](https://learn.microsoft.com/en-us/azure/aks/upgrade-windows-2019-2022).
+  - Add required yaml files for AKS.
+
 #### Pipeline Changes 
-•	Add AKSConfigPrefix in Web.config
-<br>
-•	Do ADO pipeline changes related to .NET FrameWork for Windows.Also check default agent pools supported versions.
-<br>
-•	Do Octopus Pipeline Changes Windows , Octopus Deploy Linux - Octopus Deploy.
-<br>
-•	All pipelines should be independently released so the apps team can take release any time. 
-<br>
-•	Disable DEV ADO and Octopus pipeline once they are good with aks
-<br>
-•	Store andmanage the DLL versions.
-<br>
-•	Application team to communicate with all consumers about the New dll versions. Publish the documented process to consume the latest dlls for new changes. 
-<br>
+  - Add AKSConfigPrefix in Web.config
+  - Do ADO pipeline changes related to .NET FrameWork for Windows.Also check default agent pools supported versions.
+  - Do Octopus Pipeline Changes Windows , Octopus Deploy Linux - Octopus Deploy.
+  - All pipelines should be independently released so the apps team can take release any time. 
+  - Disable DEV ADO and Octopus pipeline once they are good with aks
+  - Store andmanage the DLL versions.
+  - Application team to communicate with all consumers about the New dll versions. Publish the documented process to consume the latest dlls for new changes. 
+
 #### AKS deployment related Changes
-o	Decide the AKS version as per [release calander](https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar).
-<br>
-o In AKS if you need Windows Containers node pool, then while creating the cluster you need bydefault a system linux container node pool with at least three nodes.In the AKS cluster you have to use the "y --windows-admin-username parameter" otherwise AKS will not prepare itself for windows nodepools.[know more](https://learn.microsoft.com/en-us/azure/aks/learn/quick-windows-container-deploy-cli#create-an-aks-cluster)
-<br>
-o	Next create [windows nodepool](https://learn.microsoft.com/en-us/azure/aks/learn/quick-windows-container-deploy-cli#add-a-windows-server-2022-node-pool)
-** You may need to update the CLI version to higher version (2.40) with terraform deployment.
-<br>
-o	Check Resource Quotas/RBAC at namespace level
-<br>
-o Configure [scaling](https://learn.microsoft.com/en-us/azure/aks/cluster-autoscaler)
-<br>
-o	Review existing policy to handle AKS Configuration, maintain specific set of node type, number etc
-<br>
-o	Maintain segregation of Node pool- system & user, use combination of taints/tolerations, node affinity + pod affinity in specified namespace for user node pool
-<br>
-o	Use SLA backed AKS
-<br>
-o	Use secrets from keyvault with CSI driver if they are used through config.yaml
-<br>
-o	Optimize request and limit at pod level, after few deployments and testing are completed.
-<br>
-o	Communication from namespace A to namespace B can be restricted through network policies
-<br>
-o	Use ACR as image repository and [authenticate](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-authentication?tabs=azure-cli)
-<br>
+  - Decide the AKS version as per [release calander](https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar).
+  - In AKS if you need Windows Containers node pool, then while creating the cluster you need bydefault a system linux container node pool with at least three nodes.In the AKS cluster you have to use the "y --windows-admin-username parameter" otherwise AKS will not prepare itself for windows nodepools.[know more](https://learn.microsoft.com/en-us/azure/aks/learn/quick-windows-container-deploy-cli#create-an-aks-cluster)
+  - Next create [windows nodepool](https://learn.microsoft.com/en-us/azure/aks/learn/quick-windows-container-deploy-cli#add-a-windows-server-2022-node-pool)
+      * You may need to update the CLI version to higher version (2.40) with terraform deployment.
+  - Check Resource Quotas/RBAC at namespace level
+  - Configure [scaling](https://learn.microsoft.com/en-us/azure/aks/cluster-autoscaler)
+  - Review existing policy to handle AKS Configuration, maintain specific set of node type, number etc
+  - Maintain segregation of Node pool- system & user, use combination of taints/tolerations, node affinity + pod affinity in specified namespace for user node pool
+  - Use SLA backed AKS
+  - Use secrets from keyvault with CSI driver if they are used through config.yaml
+  - Optimize request and limit at pod level, after few deployments and testing are completed.
+  - Communication from namespace A to namespace B can be restricted through network policies
+  - Use ACR as image repository and [authenticate](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-authentication?tabs=azure-cli)
+
 ## Infra Changes 
-•	Create New Subnet for AKS inside the existing Vnet. Subnet size-should be greater or equal to number of pods
-<br>
-•	Create New AKS Cluster 
-<br>
-•	Create node pool with ephemeral OS disk (heavy IOPS) and availability zones. Test throughput
-<br>
-•	Avoid using custom dns
-<br>
-•	Use Static public IP address
-<br>
-•	Use Azure vNET integration via Azure CNI
-<br>
+  - Create New Subnet for AKS inside the existing Vnet. Subnet size-should be greater or equal to number of pods.
+  - Create New AKS Cluster.
+  - Consider using Ephemeral OS disk (faster IOPS). Test throughput.
+  >  Specify the ephemeral disks on the AKS cluster at creation time or when adding a new nodepool by specifying the following property:
+  >  <br>[--node-osdisk-type {Ephemeral, Managed}]
+  - Avoid using custom dns.
+  - Use Static public IP address.
+  - Use Azure vNET integration via Azure CNI
+  - Considering using [Proximity Placement Group](https://learn.microsoft.com/en-us/azure/aks/reduce-latency-ppg#add-a-proximity-placement-group-to-an-existing-cluster).
+
 ## Sample Migration Process for Projects
 
 **For Windows  container deployment-**
@@ -165,12 +136,12 @@ Few more links-
 [Continuation of container support in Azure Service Fabric](https://github.com/Azure/Service-Fabric-Troubleshooting-Guides/blob/master/Deployment/Mirantis-Guidance.md)
 <br>
 ## Documentation challenges faced
-•	Multiple build related errors during each project migration. Create KB article to help other team members to reduce time for troubleshooting.
-<br>
-•	Legacy dll consumption causing more inter dependency and migration is not straight forward without checking them. Use NuGet.
-<br>
+  - Multiple build related errors during each project migration. Create KB article to help other team members to reduce time for troubleshooting.
+  - Legacy dll consumption causing more inter dependency and migration is not straight forward without checking them. Use NuGet.
+ 
 ## Performance Optimization
 With latest deployment in AKS, We performed various performance tests and used multiple tools.The outcome of these performance tests showed whether there is problem with overall performance or with the deployment. 
+<br>I could be due to lack of performance at the Underlay VMs themselves(not enough CPU, not enough Memory), lack of requests and limits defined at the pod level or requests and limits wrongly configured, it can be related to the Network on the node, can be from the application code itself.
 <br>
 **Best practices**
 <br>
@@ -186,7 +157,7 @@ With latest deployment in AKS, We performed various performance tests and used m
 <br>
 •	Run the performance test for the environment (with the same sample data, and the same load) at least three times, to check whether there are significant variations per performance test cycle for the same environment (old, or new)
 <br>
-•	Gather Network stack traces and Process Dumps for given containers during the stress test (And not while manual / user testing). Find a way to maximize duration of dumps.Capture [GCdump](https://devblogs.microsoft.com/dotnet/collecting-and-analyzing-memory-dumps/).capture [tcpdump](https://learn.microsoft.com/en-us/troubleshoot/azure/azure-kubernetes/packet-capture-pod-level) from the pod level.
+•	Gather Network stack traces and Process Dumps for given containers during the stress test (And not while manual / user testing). Find a way to maximize duration of capturing dumps.Capture [GCdump](https://devblogs.microsoft.com/dotnet/collecting-and-analyzing-memory-dumps/), capture [Processdump](https://npmsblog.wordpress.com/how-to-generate-iis-w3wp-process-dump-from-aks-windows-pod/), capture [tcpdump](https://learn.microsoft.com/en-us/troubleshoot/azure/azure-kubernetes/packet-capture-pod-level) from the pod level.
 <br>
 •	Use the monitoring tabs in the Azure portal, also connect to the nodes/pods and collect [logs](https://learn.microsoft.com/en-us/troubleshoot/azure/azure-kubernetes/identify-memory-saturation-aks)
 • If in scope then guide customer to check code base as well.
