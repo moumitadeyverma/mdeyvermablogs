@@ -118,16 +118,16 @@ Make the workloads compatible, by checking the reports provided by the tool-
 
 ## Sample Migration Process for Projects
 
-**For Windows  container deployment-**
+#### For Windows  container deployment
 <br>
 The DevOps team can perform repository-wise migration. For win framework projects update the framework version with 4.8 on the existing dev repository. 
 <br> Once the package is ready, deploy it. Post deployment, point the application on dev branch from ASF to AKS. Once the Developer provides sign-off on Dev, perform API health check. DevOps then updates the Release branch code with the latest framework and deploys the AKS and ASF on QC environment. In between, if any features or bug fixing is required by the app team, then they can work on the current repository and take release at any time. The old Deployment pipeline can be alive till production. Disable the Old Pipeline across all branch’s postproduction deployment.
-<br>
-**For Linux  container deployment-**
-<br>
+
+#### For Linux  container deployment
 Steps are more or less similar for.NET Core 2.1/2.2/3.1 to .NET 6.0. We used the ubuntu image Ubuntu 22.04 for AKS 1.23. 
 <br>
 From AKS 1.25 and afterwards, the underlying image will change.[know more](https://github.com/Azure/AKS/releases/tag/2022-09-25)
+<br>
 <br>
 Few more links-
 <br>
