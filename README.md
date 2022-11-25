@@ -5,7 +5,8 @@ When we had just started out, we could not find appropriate guidelines or steps 
 <br>
 Journey began when one of our costumers got the [communication](https://techcommunity.microsoft.com/t5/containers/reminder-updates-to-windows-container-runtime-support/ba-p/3620989) that  for their stable workloads deployed in ASF containers they have to face issues. ASF windows containers were internally using Mirantis Container Runtime, former DockerEE.
 <br>
-**"Post 30 April 2023 Service Fabric customers using “with containers” VM images will face service disruptions as Microsoft will remove the “with container” VM images from the Azure image gallery".**
+> **"Post 30 April 2023 Service Fabric customers using “with containers” VM images will face service disruptions as Microsoft will remove the “with container” VM images from the Azure image gallery".**
+
 <br>After initial investigation we figured out that moving to AKS Linux container is in the final roadmap of the current product.
 <br>
 ## Decision Factors
@@ -23,18 +24,15 @@ For deciding  the .net framework version use the [link](https://learn.microsoft.
 <br>
 For upgrading to latest version use the below tools-
 
- **[Portability Analyzer](https://docs.microsoft.com/en-us/dotnet/standard/analyzers/portability-analyzer)**
- <br>
+ **[Portability Analyzer](https://docs.microsoft.com/en-us/dotnet/standard/analyzers/portability-analyzer)**,
  **[Upgrade Assistant](https://dotnet.microsoft.com/en-us/platform/upgrade-assistant/tutorial/install-upgrade-assistant)** 
  <br>
  
 #### We took the below approach to upgrade containers
-• Moved existing windows containers to latest AKS windows containers- WS2022 for several number of important reasons [know more](https://learn.microsoft.com/en-us/virtualization/windowscontainers/about/whats-new-ws2022-containers)
-<br>
-• Moved the existing linux containers to AKS Linux containers 
-<br>
-• Left the WCF services untouched, hosted in ASF with worker role and customization. [know more](https://learn.microsoft.com/en-us/azure/service-fabric/service-fabric-reliable-services-communication-wcf).
-Since customer is planning eventually to move everything to linux containers ,so later they have to re implement the WCF part with more modern technologies like gRPC or http Request/Response webApIs.
+  - Moved existing windows containers to latest AKS windows containers- WS2022 for several number of important reasons [know more](https://learn.microsoft.com/en-us/virtualization/windowscontainers/about/whats-new-ws2022-containers)
+  * Moved the existing linux containers to AKS Linux containers 
+  - Left the WCF services untouched, hosted in ASF with worker role and customization. [know more](https://learn.microsoft.com/en-us/azure/service-fabric/service-fabric-reliable-services-communication-wcf).
+  Since customer is planning eventually to move everything to linux containers ,so later they have to re implement the WCF part with more modern technologies like gRPC or http Request/Response webApIs.
 <br>
 Refer to the below links to find out the correct base image, that has IIS Roles enabled for windows containers
 <br>
@@ -42,6 +40,7 @@ https://mcr.microsoft.com/en-us/product/dotnet/framework/aspnet/about
 <br>
 https://hub.docker.com/_/microsoft-windows-servercore-iis?tab=description
 <br>
+
 ## Developer steps
 Changes are to be made in the new or existing repository as per the organization process.
 
