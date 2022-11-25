@@ -48,14 +48,11 @@ Changes are to be made in the new or existing repository as per the organization
 Use tools like [Cloud Pilot](https://www.youtube.com/watch?v=cO27cq9IiuE&list=PL8ZFxfkhI2ewuyjmmcls7_xTJX1ciEARl) to discover applications and APIs that are in scope of migrtaion.
 <br>
 Make the workloads compatible, by checking the reports provided by the tool-
-<br>
-  • Recommendations Rresults  by 4 pillars- Application & Platform design, Security,Network & Availability and Storage
-<br>
-  • Migration Effort.
-<br>
-  • Readiness Status in percentage.
-<br>
-  • Detailed code level fix guidance.
+
+  - Recommendations Rresults  by 4 pillars- Application & Platform design, Security,Network & Availability and Storage
+  * Migration Effort.
+  - Readiness Status in percentage.
+  * Detailed code level fix guidance.
 
 #### Migration from Framework 4.6.1 to 4.8
 •	Change the target framework from “<TargetFrameworkVersion>v4.6.1</ TargetFrameworkVersion >“ to “<TargetFrameworkVersion >v4.8</ TargetFrameworkVersion >“ for every project in the solution that you are targeting.
@@ -205,6 +202,6 @@ With latest deployment in AKS, We performed various performance tests and used m
 <br>
 <br>
 <br>
-Feedback appreciated ....__[By Moumita Dey Verma](https://www.linkedin.com/in/moumita-dey-verma-8b61692a/)__
+Feedback appreciated :+1:               __[By Moumita Dey Verma](https://www.linkedin.com/in/moumita-dey-verma-8b61692a/)__ :shipit:
 
 
