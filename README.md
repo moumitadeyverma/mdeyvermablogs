@@ -55,27 +55,18 @@ Make the workloads compatible, by checking the reports provided by the tool-
   * Detailed code level fix guidance.
 
 #### Migration from Framework 4.6.1 to 4.8
-•	Change the target framework from “<TargetFrameworkVersion>v4.6.1</ TargetFrameworkVersion >“ to “<TargetFrameworkVersion >v4.8</ TargetFrameworkVersion >“ for every project in the solution that you are targeting.
-<br>
-•	If your repo has multiple solutions and they are configured to build the pipeline, then update them all together to use the new version. 
-<br>
-•	Some NuGet will give issues, reinstall them again, fix the issues locally. It will not affect the pipeline build because the NuGet is installed every time the pipeline runs.
-<br>
-•	If the AKS deployment folder is not available, create and add the yaml files to the AKS deployment folder. Change Docker image for latest version. 
-<br>
-•	In Docker file you may get few errors related to "Import-Module WebAdministration" in POWERSHELL command. Check the [reference link](https://docs.docker.com/engine/reference/builder/#shell). If the Web server Role (IIS) is not active/installed, you need to enable the Web Role before "Import-Module WebAdministration" like this.
-<br>
-  run powershell Install-WindowsFeature Web-Server,Web-Common-Http,Web-Mgmt-Console -Restart
-<br>
-•	Consider Stateless microservices.Stateful microservices are not in scope of migration.
-<br>
-•	Data processing logic using Persistent Storage must be validated. Use Volumes, Persistent Volumes, Storage Classes, Persistent volume claims.
-<br>
-•	AKS container hosted sites interact with ASF hosted WCF services.
-<br>
-•	Changes related to Common dLL will be required to be published first, to be consumed by others.
-<br>
-•	The Service Fabric programming models like reliable services, reliable actors, Guest executables will need revisit or redesign.
+  - Change the target framework from “<TargetFrameworkVersion>v4.6.1</ TargetFrameworkVersion >“ to “<TargetFrameworkVersion >v4.8</ TargetFrameworkVersion >“ for every project in the solution that you are targeting.
+  - If your repo has multiple solutions and they are configured to build the pipeline, then update them all together to use the new version. 
+
+  - Some NuGet will give issues, reinstall them again, fix the issues locally. It will not affect the pipeline build because the NuGet is installed every time the pipeline runs.
+  - If the AKS deployment folder is not available, create and add the yaml files to the AKS deployment folder. Change Docker image for latest version. 
+  - In Docker file you may get few errors related to "Import-Module WebAdministration" in POWERSHELL command. Check the [reference link](https://docs.docker.com/engine/reference/builder/#shell). If the Web server Role (IIS) is not active/installed, you need to enable the Web Role before "Import-Module WebAdministration" like this.
+  > run powershell Install-WindowsFeature Web-Server,Web-Common-Http,Web-Mgmt-Console -Restart
+  - Consider Stateless microservices.Stateful microservices are not in scope of migration.
+  - Data processing logic using Persistent Storage must be validated. Use Volumes, Persistent Volumes, Storage Classes, Persistent volume claims.
+  - AKS container hosted sites interact with ASF hosted WCF services.
+  - Changes related to Common dLL will be required to be published first, to be consumed by others.
+  - The Service Fabric programming models like reliable services, reliable actors, Guest executables will need revisit or redesign.
 
 #### DevOps practices
 •	All developers to install the latest version of Visual Studio 2019 (or greater) and appropriate .NET SDK. 
