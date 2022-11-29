@@ -51,8 +51,12 @@ Make the workloads compatible, by checking the reports provided by the tool-
 
 #### Migration from Framework 4.6.1 to 4.8
   - Change the target framework from “<TargetFrameworkVersion>v4.6.1</ TargetFrameworkVersion >“ to “<TargetFrameworkVersion >v4.8</ TargetFrameworkVersion >“ for every project in the solution that you are targeting.
+  - Open the Package Manager Console and run the following command:
+> PM> Update-Package -Reinstall
   - If your repo has multiple solutions and they are configured to build the pipeline, then update them all together to use the new version. 
-  - Some NuGet will give issues, reinstall them again, fix the issues locally. It will not affect the pipeline build because the NuGet is installed every time the pipeline runs.
+  - Some NuGet will give errors, reinstall them again, fix the issues locally. It will not affect the pipeline build because the NuGet is installed every time the pipeline runs.
+  - In Package.Config change the <httpRuntime> tag and add/change the "targetframework ="4.8""
+  - The target framework moniker (TFM) to apply when installing the package. This is initially set to the project's target when a package is installed. As a result, different <package> elements can have different TFMs. [Know more](https://learn.microsoft.com/en-us/nuget/reference/target-frameworks)
   - If the AKS deployment folder is not available, create and add the yaml files to the AKS deployment folder. Change Docker image for latest version. 
   - In Docker file you may get few errors related to "Import-Module WebAdministration" in POWERSHELL command. Check the [reference link](https://docs.docker.com/engine/reference/builder/#shell). If the Web server Role (IIS) is not active/installed, you need to enable the Web Role before "Import-Module WebAdministration" like this.
   > run powershell Install-WindowsFeature Web-Server,Web-Common-Http,Web-Mgmt-Console -Restart
