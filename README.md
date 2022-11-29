@@ -108,8 +108,8 @@ Make the workloads compatible, by checking the reports provided by the tool-
   >  Specify the ephemeral disks on the AKS cluster at creation time or when adding a new nodepool by specifying the following property:
   >  <br>[--node-osdisk-type {Ephemeral, Managed}]
   - Avoid using custom dns.
-  - Use Static public IP address.
-  - Use Azure vNET integration via Azure CNI
+  - Use Azure vNET integration via Azure CNI.
+  - Use [dynamic allocation](https://learn.microsoft.com/en-us/azure/aks/configure-azure-cni#dynamic-allocation-of-ips-and-enhanced-subnet-support) of IPs.
   - Considering using [Proximity Placement Group](https://learn.microsoft.com/en-us/azure/aks/reduce-latency-ppg#add-a-proximity-placement-group-to-an-existing-cluster).
 
 ## Sample Migration Process for Projects
