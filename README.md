@@ -109,6 +109,7 @@ Make the workloads compatible, by checking the reports provided by the tool-
   >  <br>[--node-osdisk-type {Ephemeral, Managed}]
   - Avoid using custom dns.
   - Use Azure vNET integration via Azure CNI
+  - Use [Dynamic allocation of ips](https://learn.microsoft.com/en-us/azure/aks/configure-azure-cni#dynamic-allocation-of-ips-and-enhanced-subnet-support)
   - Considering using [Proximity Placement Group](https://learn.microsoft.com/en-us/azure/aks/reduce-latency-ppg#add-a-proximity-placement-group-to-an-existing-cluster).
 
 ## Sample Migration Process for Projects
